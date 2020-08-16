@@ -4,6 +4,7 @@ import { COLORS } from "../constants";
 import catLogo from "../assets/logo.svg";
 import { FaHome, FaUser, FaRegBell, FaRegBookmark } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
+import { CurrentUserContext } from "../CurrentUserContext";
 
 const SidebarWrapper = styled.div`
   display: flex;
@@ -38,27 +39,39 @@ const Logo = styled.img`
 `;
 
 const Sidebar = () => {
+  const data = React.useContext(CurrentUserContext);
+  console.log(data);
+
   return (
     <SidebarWrapper>
       <LogoWrapper>
         <Logo src={catLogo} alt="Cat Logo" />
       </LogoWrapper>
-      <NavigationLink to="/" exact activeClassName="active">
-        <FaHome />
-        &nbsp;&nbsp;&nbsp;&nbsp;Home
-      </NavigationLink>
-      <NavigationLink to="/:profileId" exact activeClassName="active">
-        <FaUser />
-        &nbsp;&nbsp;&nbsp;&nbsp;Profile
-      </NavigationLink>
-      <NavigationLink to="/notifications" exact activeClassName="active">
-        <FaRegBell />
-        &nbsp;&nbsp;&nbsp;&nbsp;Notifications
-      </NavigationLink>
-      <NavigationLink to="/bookmarks" exact activeClassName="active">
-        <FaRegBookmark />
-        &nbsp;&nbsp;&nbsp;&nbsp;Bookmarks
-      </NavigationLink>
+      {data.status === "loading" && <LogoWrapper>Loading...</LogoWrapper>}
+      {data.status === "idle" && (
+        <NavigationLink to="/" exact activeClassName="active">
+          <FaHome />
+          &nbsp;&nbsp;&nbsp;&nbsp;Home
+        </NavigationLink>
+      )}
+      {data.status === "idle" && (
+        <NavigationLink to="/:profileId" exact activeClassName="active">
+          <FaUser />
+          &nbsp;&nbsp;&nbsp;&nbsp;Profile
+        </NavigationLink>
+      )}
+      {data.status === "idle" && (
+        <NavigationLink to="/notifications" exact activeClassName="active">
+          <FaRegBell />
+          &nbsp;&nbsp;&nbsp;&nbsp;Notifications
+        </NavigationLink>
+      )}
+      {data.status === "idle" && (
+        <NavigationLink to="/bookmarks" exact activeClassName="active">
+          <FaRegBookmark />
+          &nbsp;&nbsp;&nbsp;&nbsp;Bookmarks
+        </NavigationLink>
+      )}
     </SidebarWrapper>
   );
 };
