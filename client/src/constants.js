@@ -1,6 +1,8 @@
 export const COLORS = {
   // Bright purple:
-  primary: "hsl(258deg, 100%, 50%)",
+  primary: "#a600ff",
 
   // Add more colors as needed!
+
+  light: "#f6ccff",
 };
