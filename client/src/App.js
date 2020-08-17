@@ -5,7 +5,7 @@ import styled from "styled-components";
 import HomeFeed from "./components/HomeFeed";
 import Notifications from "./components/Notifications";
 import Bookmarks from "./components/Bookmarks";
-import TweetDetails from "./components/TweetDetails";
+import TweetDetails from "./components/tweet/TweetDetails";
 import Profile from "./components/Profile";
 import Sidebar from "./components/Sidebar";
 
@@ -15,7 +15,7 @@ const PageWrapper = styled.div`
 `;
 
 const SidebarColumn = styled.div`
-  flex: 3;
+  flex: 2;
 `;
 
 const RouterColumn = styled.div`
@@ -59,9 +59,6 @@ function App() {
           </Route>
           <Route exact path="/tweet/:tweetId">
             <PageWrapper>
-              <SidebarColumn>
-                <Sidebar />
-              </SidebarColumn>
               <RouterColumn>
                 <TweetDetails />
               </RouterColumn>
