@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { COLORS } from "../constants";
 import SmallTweet from "./tweet/SmallTweet";
+import { CurrentUserContext } from "../CurrentUserContext";
 
 const Wrapper = styled.div`
   border: 1px solid #ccc;
@@ -77,6 +78,18 @@ const TweetListWrapper = styled.div`
 `;
 
 const HomeFeed = () => {
+  const [feed, setFeed] = React.useState({ tweetIds: [] });
+
+  const fetchFeed = async () => {
+    const call = await fetch("http://localhost:31415/api/me/home-feed");
+    const data = await call.json();
+    setFeed(data);
+  };
+
+  useEffect(() => {
+    fetchFeed();
+  }, []);
+
   return (
     <Wrapper>
       <PageTitle>Home</PageTitle>
@@ -94,8 +107,9 @@ const HomeFeed = () => {
         </InputColumn>
       </NewPostWrapper>
       <TweetListWrapper>
-        <SmallTweet></SmallTweet>
-        <SmallTweet></SmallTweet>
+        {feed.tweetIds.map((id) => {
+          return <SmallTweet key={id} tweet={feed.tweetsById[id]} />;
+        })}
       </TweetListWrapper>
     </Wrapper>
   );

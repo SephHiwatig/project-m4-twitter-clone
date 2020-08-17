@@ -40,7 +40,6 @@ const Logo = styled.img`
 
 const Sidebar = () => {
   const data = React.useContext(CurrentUserContext);
-  console.log(data);
 
   return (
     <SidebarWrapper>
