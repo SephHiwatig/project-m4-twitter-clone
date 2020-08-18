@@ -1,11 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import {
-  FaRegComment,
-  FaRetweet,
-  FaRegHeart,
-  FaShareSquare,
-} from "react-icons/fa";
+import Actions from "./Actions";
 import moment from "moment";
 
 const TweetWrapper = styled.div`
@@ -49,14 +44,7 @@ const Media = styled.img`
   border-radius: 15px;
 `;
 
-const Actions = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 8px;
-`;
-
 const SmallTweet = ({ tweet }) => {
-  console.log(tweet);
   return (
     <TweetWrapper>
       <ImageCol>
@@ -72,12 +60,7 @@ const SmallTweet = ({ tweet }) => {
         </Name>
         <Caption>{tweet.status}</Caption>
         {tweet.media.length > 0 && <Media src={tweet.media[0].url} />}
-        <Actions>
-          <FaRegComment />
-          <FaRetweet />
-          <FaRegHeart />
-          <FaShareSquare />
-        </Actions>
+        <Actions />
       </InfoCol>
     </TweetWrapper>
   );
