@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Actions from "./Actions";
 import moment from "moment";
+import { NavLink } from "react-router-dom";
 
 const TweetWrapper = styled.div`
   display: flex;
@@ -44,7 +45,13 @@ const Media = styled.img`
   border-radius: 15px;
 `;
 
-const SmallTweet = ({ tweet }) => {
+const NavigationLink = styled(NavLink)`
+  cursor: pointer;
+  text-decoration: none;
+  color: #000;
+`;
+
+const SmallTweet = ({ tweet, setTweet }) => {
   return (
     <TweetWrapper>
       <ImageCol>
@@ -52,15 +59,19 @@ const SmallTweet = ({ tweet }) => {
       </ImageCol>
       <InfoCol>
         <Name>
-          {tweet.author.displayName}{" "}
+          <NavigationLink to={"/" + tweet.author.handle} exact>
+            {tweet.author.displayName}{" "}
+          </NavigationLink>
           <Username>
             @{tweet.author.handle} &bull;{" "}
             {moment(tweet.timestamp).format("MMM DD")}
           </Username>
         </Name>
-        <Caption>{tweet.status}</Caption>
-        {tweet.media.length > 0 && <Media src={tweet.media[0].url} />}
-        <Actions />
+        <NavigationLink to={"/tweet/" + tweet.id} exact>
+          <Caption>{tweet.status}</Caption>
+          {tweet.media.length > 0 && <Media src={tweet.media[0].url} />}
+        </NavigationLink>
+        <Actions tweet={tweet} setTweet={setTweet} />
       </InfoCol>
     </TweetWrapper>
   );

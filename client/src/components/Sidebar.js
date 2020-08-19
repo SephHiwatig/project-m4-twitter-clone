@@ -54,7 +54,11 @@ const Sidebar = () => {
         </NavigationLink>
       )}
       {data.status === "idle" && (
-        <NavigationLink to="/:profileId" exact activeClassName="active">
+        <NavigationLink
+          to={"/" + data.currentUser.handle}
+          exact
+          activeClassName="active"
+        >
           <FaUser />
           &nbsp;&nbsp;&nbsp;&nbsp;Profile
         </NavigationLink>

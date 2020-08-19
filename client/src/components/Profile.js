@@ -4,6 +4,8 @@ import { COLORS } from "../constants";
 import { FaMapMarkerAlt, FaRegCalendar, FaRetweet } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import SmallTweet from "./tweet/SmallTweet";
+import moment from "moment";
+import { CurrentUserContext } from "../CurrentUserContext";
 
 const ProfileWrapper = styled.div`
   border: 1px solid #ccc;
@@ -92,64 +94,117 @@ const TweetListWrapper = styled.div`
 
 const Profile = () => {
   let { profileId } = useParams();
+  const context = React.useContext(CurrentUserContext);
+  const [profileInfo, setProfileInfo] = React.useState({});
   const [feed, setFeed] = React.useState({ tweetIds: [] });
 
-  const fetchFeed = async () => {
-    const call = await fetch(
+  const fetchProfile = async () => {
+    const profile = await fetch(
+      "http://localhost:31415/api/" + profileId + "/profile"
+    );
+    const profileData = await profile.json();
+    setProfileInfo(profileData.profile);
+
+    const feed = await fetch(
       "http://localhost:31415/api/" + profileId + "/feed"
     );
-    const data = await call.json();
-    console.log(data);
-    setFeed(data);
+    const feedData = await feed.json();
+    setFeed(feedData);
   };
 
   useEffect(() => {
-    fetchFeed();
-  }, []);
+    fetchProfile();
+  }, [profileId]);
+
+  const follow = async (action) => {
+    const data = await fetch(
+      "http://localhost:31415/api/" + profileId + "/" + action,
+      { method: "PUT" }
+    );
+    const { success } = await data.json();
+    console.log(success);
+    if (success) {
+      const newProfileInfo = {
+        ...profileInfo,
+      };
+      if (action === "follow") {
+        newProfileInfo.isBeingFollowedByYou = true;
+      } else if (action === "unfollow") {
+        newProfileInfo.isBeingFollowedByYou = false;
+      }
+      setProfileInfo(newProfileInfo);
+    }
+  };
+
+  const setTweet = (tweet) => {
+    const newFeed = {
+      // tweetIds: { ...tweet.tweetIds },
+      // tweetsById: { ...tweet.tweetsById },
+      ...feed,
+    };
+    newFeed.tweetsById[tweet.id] = tweet;
+
+    setFeed(newFeed);
+  };
 
   return (
     <ProfileWrapper>
-      <Banner
-        src="https://image.shutterstock.com/image-photo/banner-cat-web-header-template-260nw-1030847524.jpg"
-        alt="Cat Photo"
-      />
-      <Header>
-        <ProfilePhoto src="https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_relaxing_on_patio_other/1800x1200_cat_relaxing_on_patio_other.jpg?resize=750px:*" />
-        <FollowBtn>Follow</FollowBtn>
-      </Header>
-      <UserInfo>
-        <UserName>Name Here</UserName>
-        <Span>@diplomog</Span>
-        <FollowInfo>Follows You</FollowInfo>
-        <p>Bestfriends with asdsadsa</p>
-        <div>
-          <Span>
-            <FaMapMarkerAlt /> Location
-          </Span>
-          <Span>
-            <FaRegCalendar /> Joined Oct 2020
-          </Span>
-        </div>
-      </UserInfo>
-      <MenuTab>
-        <MenuItem>Tweets</MenuItem>
-        <MenuItem>Media</MenuItem>
-        <MenuItem>Like</MenuItem>
-      </MenuTab>
-      <TweetListWrapper>
-        {feed.tweetIds.map((id) => {
-          return (
-            <div key={id}>
-              {feed.tweetsById[id].retweetFrom && (
-                <Remeowed>
-                  <FaRetweet /> Remeowed
-                </Remeowed>
+      {profileInfo && (
+        <>
+          <Banner src={profileInfo.bannerSrc} alt="Cat Photo" />
+          <Header>
+            <ProfilePhoto src={profileInfo.avatarSrc} />
+            {context.currentUser &&
+              context.currentUser.handle !== profileId &&
+              !profileInfo.isBeingFollowedByYou && (
+                <FollowBtn onClick={follow.bind(null, "follow")}>
+                  Follow
+                </FollowBtn>
               )}
-              <SmallTweet tweet={feed.tweetsById[id]} />
+            {context.currentUser &&
+              context.currentUser.handle !== profileId &&
+              profileInfo.isBeingFollowedByYou && (
+                <FollowBtn onClick={follow.bind(null, "unfollow")}>
+                  Unfollow
+                </FollowBtn>
+              )}
+          </Header>
+          <UserInfo>
+            <UserName>{profileInfo.displayName}</UserName>
+            <Span>@diplomog</Span>
+            {profileInfo.isFollowingYou && <FollowInfo>Follows You</FollowInfo>}
+            <p>{profileInfo.bio}</p>
+            <div>
+              <Span>
+                <FaMapMarkerAlt /> {profileInfo.location}
+              </Span>
+              <Span>
+                <FaRegCalendar /> Joined{" "}
+                {moment(profileInfo.joined).format("MMM YYYY")}
+              </Span>
             </div>
-          );
-        })}
-      </TweetListWrapper>
+          </UserInfo>
+          <MenuTab>
+            <MenuItem>Tweets</MenuItem>
+            <MenuItem>Media</MenuItem>
+            <MenuItem>Like</MenuItem>
+          </MenuTab>
+          <TweetListWrapper>
+            {feed.tweetIds.map((id) => {
+              return (
+                <div key={id}>
+                  {feed.tweetsById[id].retweetFrom && (
+                    <Remeowed>
+                      <FaRetweet /> Remeowed
+                    </Remeowed>
+                  )}
+                  <SmallTweet tweet={feed.tweetsById[id]} setTweet={setTweet} />
+                </div>
+              );
+            })}
+          </TweetListWrapper>
+        </>
+      )}
     </ProfileWrapper>
   );
 };

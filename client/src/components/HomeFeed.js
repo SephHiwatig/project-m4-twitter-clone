@@ -79,7 +79,7 @@ const TweetListWrapper = styled.div`
 
 const HomeFeed = () => {
   const context = React.useContext(CurrentUserContext);
-  console.log(context);
+
   const [feed, setFeed] = React.useState({ tweetIds: [] });
 
   const fetchFeed = async () => {
@@ -90,7 +90,17 @@ const HomeFeed = () => {
 
   useEffect(() => {
     fetchFeed();
-  }, []);
+  });
+
+  const setTweet = (tweet) => {
+    const newFeed = {
+      ...feed,
+    };
+
+    newFeed.tweetsById[tweet.id] = tweet;
+
+    setFeed(newFeed);
+  };
 
   return (
     <Wrapper>
@@ -112,7 +122,13 @@ const HomeFeed = () => {
       </NewPostWrapper>
       <TweetListWrapper>
         {feed.tweetIds.map((id) => {
-          return <SmallTweet key={id} tweet={feed.tweetsById[id]} />;
+          return (
+            <SmallTweet
+              key={id}
+              tweet={feed.tweetsById[id]}
+              setTweet={setTweet}
+            />
+          );
         })}
       </TweetListWrapper>
     </Wrapper>
