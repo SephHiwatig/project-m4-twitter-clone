@@ -16,7 +16,11 @@ const Action = styled.div`
 
 const ButtonWrapper = styled.button`
   border: none;
-  background-color: none;
+  background-color: transparent;
+`;
+
+const Retweeted = styled(FaRetweet)`
+  color: lightblue;
 `;
 
 const Actions = ({ tweet, setTweet }) => {
@@ -47,6 +51,34 @@ const Actions = ({ tweet, setTweet }) => {
     }
   };
 
+  const retweet = async (action) => {
+    const data = await fetch(
+      "http://localhost:31415/api/tweet/" + tweet.id + "/retweet",
+      {
+        method: "PUT",
+        body: JSON.stringify({ retweet: action }),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const { success } = await data.json();
+
+    if (success) {
+      const updatedTweet = { ...tweet };
+      if (action) {
+        updatedTweet.isRetweeted = true;
+        updatedTweet.numRetweets += 1;
+      } else {
+        updatedTweet.isRetweeted = false;
+        updatedTweet.numRetweets -= 1;
+      }
+      setTweet(updatedTweet);
+    }
+  };
+
   return (
     <Action>
       <div>
@@ -55,7 +87,17 @@ const Actions = ({ tweet, setTweet }) => {
       </div>
       <div>
         {" "}
-        <FaRetweet /> {tweet.numRetweets > 0 ? tweet.numRetweets : ""}
+        {tweet.isRetweeted && (
+          <ButtonWrapper onClick={retweet.bind(null, false)}>
+            <Retweeted />
+          </ButtonWrapper>
+        )}
+        {!tweet.isRetweeted && (
+          <ButtonWrapper onClick={retweet.bind(null, true)}>
+            <FaRetweet />
+          </ButtonWrapper>
+        )}
+        {tweet.numRetweets > 0 ? tweet.numRetweets : " "}
       </div>
       <div>
         {" "}
