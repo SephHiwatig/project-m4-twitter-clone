@@ -70,6 +70,10 @@ const PostBtn = styled.button`
   border: none;
   min-width: 70px;
   cursor: pointer;
+
+  &:disabled {
+    background-color: #e494ff;
+  }
 `;
 
 const TweetListWrapper = styled.div`
@@ -84,8 +88,8 @@ const HomeFeed = () => {
   const [feed, setFeed] = React.useState({ tweetIds: [] });
 
   const count = (event) => {
+    setCounter(280 - event.target.value.length);
     setPost(event.target.value);
-    setCounter(280 - post.length);
   };
 
   const counterColor = {
@@ -129,7 +133,7 @@ const HomeFeed = () => {
             onChange={count}
           ></TextAreaInput>
           <CharCounter style={counterColor}>{counter}</CharCounter>
-          <PostBtn>Meow</PostBtn>
+          <PostBtn disabled={counter < 0 || counter >= 280}>Meow</PostBtn>
         </InputColumn>
       </NewPostWrapper>
       <TweetListWrapper>
