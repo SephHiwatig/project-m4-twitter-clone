@@ -96,6 +96,22 @@ const HomeFeed = () => {
     color: counter < 0 ? "red" : counter <= 55 ? "yellow" : "#5c5c5c",
   };
 
+  const postTweet = async () => {
+    const data = await fetch("http://localhost:31415/api/tweet", {
+      method: "POST",
+      body: JSON.stringify({ status: post }),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (data.ok) {
+      setPost("");
+      setCounter(280);
+    }
+  };
+
   const fetchFeed = async () => {
     const call = await fetch("http://localhost:31415/api/me/home-feed");
     const data = await call.json();
@@ -133,7 +149,9 @@ const HomeFeed = () => {
             onChange={count}
           ></TextAreaInput>
           <CharCounter style={counterColor}>{counter}</CharCounter>
-          <PostBtn disabled={counter < 0 || counter >= 280}>Meow</PostBtn>
+          <PostBtn disabled={counter < 0 || counter >= 280} onClick={postTweet}>
+            Meow
+          </PostBtn>
         </InputColumn>
       </NewPostWrapper>
       <TweetListWrapper>
