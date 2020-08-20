@@ -60,7 +60,6 @@ const TextAreaInput = styled.textarea`
 const CharCounter = styled.span`
   font-size: small;
   margin-right: 8px;
-  color: #5c5c5c;
 `;
 
 const PostBtn = styled.button`
@@ -80,7 +79,18 @@ const TweetListWrapper = styled.div`
 const HomeFeed = () => {
   const context = React.useContext(CurrentUserContext);
 
+  const [post, setPost] = React.useState("");
+  const [counter, setCounter] = React.useState(280);
   const [feed, setFeed] = React.useState({ tweetIds: [] });
+
+  const count = (event) => {
+    setPost(event.target.value);
+    setCounter(280 - post.length);
+  };
+
+  const counterColor = {
+    color: counter < 0 ? "red" : counter <= 55 ? "yellow" : "#5c5c5c",
+  };
 
   const fetchFeed = async () => {
     const call = await fetch("http://localhost:31415/api/me/home-feed");
@@ -115,8 +125,10 @@ const HomeFeed = () => {
           <TextAreaInput
             rows="5"
             placeholder="What's Happening?"
+            value={post}
+            onChange={count}
           ></TextAreaInput>
-          <CharCounter>280</CharCounter>
+          <CharCounter style={counterColor}>{counter}</CharCounter>
           <PostBtn>Meow</PostBtn>
         </InputColumn>
       </NewPostWrapper>
