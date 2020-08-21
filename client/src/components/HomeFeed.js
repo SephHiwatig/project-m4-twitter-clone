@@ -4,6 +4,7 @@ import { COLORS } from "../constants";
 import SmallTweet from "./tweet/SmallTweet";
 import { CurrentUserContext } from "../CurrentUserContext";
 import { useHistory } from "react-router-dom";
+import { FaSpinner } from "react-icons/fa";
 
 const Wrapper = styled.div`
   border: 1px solid #ccc;
@@ -79,6 +80,13 @@ const PostBtn = styled.button`
 
 const TweetListWrapper = styled.div`
   background-color: #fff;
+`;
+
+const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
 `;
 
 const HomeFeed = () => {
@@ -164,17 +172,27 @@ const HomeFeed = () => {
           </PostBtn>
         </InputColumn>
       </NewPostWrapper>
-      <TweetListWrapper>
-        {feed.tweetIds.map((id) => {
-          return (
-            <SmallTweet
-              key={id}
-              tweet={feed.tweetsById[id]}
-              setTweet={setTweet}
-            />
-          );
-        })}
-      </TweetListWrapper>
+      {feed.tweetIds.length === 0 && (
+        <TweetListWrapper>
+          <IconWrapper>
+            {" "}
+            <FaSpinner />
+          </IconWrapper>
+        </TweetListWrapper>
+      )}
+      {feed.tweetIds.length > 0 && (
+        <TweetListWrapper>
+          {feed.tweetIds.map((id) => {
+            return (
+              <SmallTweet
+                key={id}
+                tweet={feed.tweetsById[id]}
+                setTweet={setTweet}
+              />
+            );
+          })}
+        </TweetListWrapper>
+      )}
     </Wrapper>
   );
 };
