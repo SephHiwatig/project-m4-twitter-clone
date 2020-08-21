@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { COLORS } from "../constants";
 import SmallTweet from "./tweet/SmallTweet";
 import { CurrentUserContext } from "../CurrentUserContext";
+import { useHistory } from "react-router-dom";
 
 const Wrapper = styled.div`
   border: 1px solid #ccc;
@@ -81,6 +82,7 @@ const TweetListWrapper = styled.div`
 `;
 
 const HomeFeed = () => {
+  const history = useHistory();
   const context = React.useContext(CurrentUserContext);
 
   const [post, setPost] = React.useState("");
@@ -97,30 +99,38 @@ const HomeFeed = () => {
   };
 
   const postTweet = async () => {
-    const data = await fetch("http://localhost:31415/api/tweet", {
-      method: "POST",
-      body: JSON.stringify({ status: post }),
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
+    try {
+      const data = await fetch("http://localhost:31415/api/tweet", {
+        method: "POST",
+        body: JSON.stringify({ status: post }),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
 
-    if (data.ok) {
-      setPost("");
-      setCounter(280);
+      if (data.ok) {
+        setPost("");
+        setCounter(280);
+      }
+    } catch {
+      history.push("/error");
     }
   };
 
   const fetchFeed = async () => {
-    const call = await fetch("http://localhost:31415/api/me/home-feed");
-    const data = await call.json();
-    setFeed(data);
+    try {
+      const call = await fetch("http://localhost:31415/api/me/home-feed");
+      const data = await call.json();
+      setFeed(data);
+    } catch {
+      history.push("/error");
+    }
   };
 
   useEffect(() => {
     fetchFeed();
-  });
+  }, []);
 
   const setTweet = (tweet) => {
     const newFeed = {

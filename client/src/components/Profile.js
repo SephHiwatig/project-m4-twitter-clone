@@ -104,7 +104,6 @@ const Profile = () => {
     );
     const profileData = await profile.json();
     setProfileInfo(profileData.profile);
-    console.log(profileData.profile);
 
     const feed = await fetch(
       "http://localhost:31415/api/" + profileId + "/feed"
@@ -123,7 +122,7 @@ const Profile = () => {
       { method: "PUT" }
     );
     const { success } = await data.json();
-    console.log(success);
+
     if (success) {
       const newProfileInfo = {
         ...profileInfo,

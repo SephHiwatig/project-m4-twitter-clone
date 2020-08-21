@@ -8,6 +8,7 @@ import Bookmarks from "./components/Bookmarks";
 import TweetDetails from "./components/tweet/TweetDetails";
 import Profile from "./components/Profile";
 import Sidebar from "./components/Sidebar";
+import ErrorPage from "./components/error";
 
 const PageWrapper = styled.div`
   display: flex;
@@ -64,6 +65,16 @@ function App() {
               </SidebarColumn>
               <RouterColumn>
                 <TweetDetails />
+              </RouterColumn>
+            </PageWrapper>
+          </Route>
+          <Route exact path="/error">
+            <PageWrapper>
+              <SidebarColumn>
+                <Sidebar />
+              </SidebarColumn>
+              <RouterColumn>
+                <ErrorPage />
               </RouterColumn>
             </PageWrapper>
           </Route>

@@ -4,6 +4,7 @@ import Actions from "./Actions";
 import { NavLink } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import moment from "moment";
+import { useHistory } from "react-router-dom";
 
 const InfoCol = styled.div`
   flex: 10;
@@ -56,14 +57,19 @@ const UserImg = styled.img`
 `;
 
 const TweetDetails = () => {
+  const history = useHistory();
   let { tweetId } = useParams();
   const [tweet, setTweet] = React.useState(null);
   const fetchTweet = async () => {
-    const tweetData = await fetch(
-      "http://localhost:31415/api/tweet/" + tweetId
-    );
-    const tempData = await tweetData.json();
-    setTweet(tempData.tweet);
+    try {
+      const tweetData = await fetch(
+        "http://localhost:31415/api/tweet/" + tweetId
+      );
+      const tempData = await tweetData.json();
+      setTweet(tempData.tweet);
+    } catch {
+      history.push("/error");
+    }
   };
 
   useEffect(() => {
