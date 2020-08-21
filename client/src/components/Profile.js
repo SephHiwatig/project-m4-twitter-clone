@@ -104,6 +104,7 @@ const Profile = () => {
     );
     const profileData = await profile.json();
     setProfileInfo(profileData.profile);
+    console.log(profileData.profile);
 
     const feed = await fetch(
       "http://localhost:31415/api/" + profileId + "/feed"
@@ -181,6 +182,20 @@ const Profile = () => {
               <Span>
                 <FaRegCalendar /> Joined{" "}
                 {moment(profileInfo.joined).format("MMM YYYY")}
+              </Span>
+            </div>
+            <div>
+              <Span>
+                <strong style={{ color: "#000" }}>
+                  {profileInfo.numFollowing}
+                </strong>{" "}
+                Following
+              </Span>
+              <Span>
+                <strong style={{ color: "#000" }}>
+                  {profileInfo.numFollowers}
+                </strong>{" "}
+                Followers
               </Span>
             </div>
           </UserInfo>

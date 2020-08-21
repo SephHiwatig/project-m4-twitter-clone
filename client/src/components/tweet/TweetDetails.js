@@ -7,33 +7,52 @@ import moment from "moment";
 
 const InfoCol = styled.div`
   flex: 10;
+  border: 1px solid #ccc;
+  padding: 4px 10px;
 `;
 
 const Name = styled.h2`
   font-size: x-large;
-  margin: 0;
+  display: flex;
 `;
 
 const Username = styled.span`
   color: #757575;
   font-size: medium;
+  display: block;
 `;
 
 const Caption = styled.p`
   margin: 8px 0;
   font-weight: 500;
+  margin: 16px 0px;
 `;
 
 const Media = styled.img`
   display: block;
   width: 100%;
   border-radius: 15px;
+  margin: 16px 0px;
 `;
 
 const NavigationLink = styled(NavLink)`
   cursor: pointer;
   text-decoration: none;
   color: #000;
+`;
+
+const PageTitle = styled.h1`
+  margin: 0;
+  border-bottom: 1px solid #ccc;
+  font-size: x-large;
+  background-color: #fff;
+`;
+
+const UserImg = styled.img`
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  margin-right: 8px;
 `;
 
 const TweetDetails = () => {
@@ -53,13 +72,17 @@ const TweetDetails = () => {
 
   return (
     <InfoCol>
+      <PageTitle>Meow</PageTitle>
       {tweet && (
         <>
           <Name>
-            <NavigationLink to={"/diplomog"} exact>
-              {tweet.author.displayName}
-            </NavigationLink>
-            <Username>@{tweet.author.handle}</Username>
+            <UserImg src={tweet.author.avatarSrc} />
+            <div>
+              <NavigationLink to={"/diplomog"} exact>
+                {tweet.author.displayName}
+              </NavigationLink>
+              <Username>@{tweet.author.handle}</Username>
+            </div>
           </Name>
           <Caption>{tweet.status}</Caption>
           {tweet.media.length > 0 && <Media src={tweet.media[0].url} />}

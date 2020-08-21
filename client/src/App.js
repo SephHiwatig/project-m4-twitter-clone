@@ -59,6 +59,9 @@ function App() {
           </Route>
           <Route exact path="/tweet/:tweetId">
             <PageWrapper>
+              <SidebarColumn>
+                <Sidebar />
+              </SidebarColumn>
               <RouterColumn>
                 <TweetDetails />
               </RouterColumn>
