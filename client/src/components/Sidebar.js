@@ -38,6 +38,14 @@ const Logo = styled.img`
   width: 50px;
 `;
 
+const MenuItem = styled.span`
+  display: none;
+
+  @media (min-width: 768px) {
+    display: inline;
+  }
+`;
+
 const Sidebar = () => {
   const data = React.useContext(CurrentUserContext);
 
@@ -50,7 +58,7 @@ const Sidebar = () => {
       {data.status === "idle" && (
         <NavigationLink to="/" exact activeClassName="active">
           <FaHome />
-          &nbsp;&nbsp;&nbsp;&nbsp;Home
+          <MenuItem>&nbsp;&nbsp;&nbsp;Home</MenuItem>
         </NavigationLink>
       )}
       {data.status === "idle" && (
@@ -60,19 +68,19 @@ const Sidebar = () => {
           activeClassName="active"
         >
           <FaUser />
-          &nbsp;&nbsp;&nbsp;&nbsp;Profile
+          <MenuItem>&nbsp;&nbsp;&nbsp;Profile</MenuItem>
         </NavigationLink>
       )}
       {data.status === "idle" && (
         <NavigationLink to="/notifications" exact activeClassName="active">
           <FaRegBell />
-          &nbsp;&nbsp;&nbsp;&nbsp;Notifications
+          <MenuItem>&nbsp;&nbsp;&nbsp;Notifications</MenuItem>
         </NavigationLink>
       )}
       {data.status === "idle" && (
         <NavigationLink to="/bookmarks" exact activeClassName="active">
           <FaRegBookmark />
-          &nbsp;&nbsp;&nbsp;&nbsp;Bookmarks
+          <MenuItem>&nbsp;&nbsp;&nbsp;Bookmarks</MenuItem>
         </NavigationLink>
       )}
     </SidebarWrapper>

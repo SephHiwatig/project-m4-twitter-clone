@@ -120,6 +120,7 @@ const HomeFeed = () => {
       if (data.ok) {
         setPost("");
         setCounter(280);
+        fetchFeed();
       }
     } catch {
       history.push("/error");

@@ -16,7 +16,7 @@ const PageWrapper = styled.div`
 `;
 
 const SidebarColumn = styled.div`
-  flex: 2;
+  flex: 3;
 `;
 
 const RouterColumn = styled.div`
