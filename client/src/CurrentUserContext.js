@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { createBrowserHistory } from "history";
 export const CurrentUserContext = React.createContext(null);
 
 export const CurrentUserProvider = ({ children }) => {
-  const history = useHistory();
+  const history = createBrowserHistory();
   const [currentUser, setCurrentUser] = React.useState(null);
   const [status, setStatus] = React.useState("loading");
 
